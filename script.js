@@ -38,8 +38,12 @@ window.addEventListener('load', function(){
             context.fillRect(this.x, this.y, this.width, this.height)
             context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
         }
-        update(){
+        update(input){
+            // horizontal movement
             this.x += this.speed
+            if (input.keys.indexOf('ArrowRight') > -1){
+                this.speed = 5
+            }
         }
     }
 
@@ -66,7 +70,7 @@ window.addEventListener('load', function(){
     function animate(){
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         player.draw(ctx)
-        player.update()
+        player.update(input)
         requestAnimationFrame(animate)
     }
     animate()
