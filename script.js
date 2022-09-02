@@ -37,10 +37,11 @@ window.addEventListener('load', function(){
             this.weight = 1
         }
         draw(context){
-            context.fillStyle = 'white'
-            context.fillRect(this.x, this.y, this.width, this.height)
+            //context.fillStyle = 'white'
+            //context.fillRect(this.x, this.y, this.width, this.height)
             context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
         }
+
         update(input){
             if (input.keys.indexOf('ArrowRight') > -1){
                 this.speed = 5
@@ -113,8 +114,9 @@ window.addEventListener('load', function(){
     }
 
     function handleEnemies(deltaTime) {
-        if (enemyTimer > enemyInterval){
+        if (enemyTimer > enemyInterval + randomEnemyInterval){
             enemies.push(new Enemy(canvas.width, canvas.height))
+            randomEnemyInterval = Math.random() * 1000 + 500
             enemyTimer = 0
         } else {
             enemyTimer += deltaTime
@@ -135,7 +137,8 @@ window.addEventListener('load', function(){
 
     let lastTime = 0
     let enemyTimer = 0
-    let enemyInterval = 2000
+    let enemyInterval = 1000
+    let randomEnemyInterval = Math.random() * 1000 + 500
 
     function animate(timeStamp){
         const deltaTime = timeStamp - lastTime
@@ -143,7 +146,7 @@ window.addEventListener('load', function(){
         console.log(deltaTime)
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         background.draw(ctx)
-        //background.update()
+        background.update()
         player.draw(ctx)
         player.update(input) 
         handleEnemies(deltaTime)
