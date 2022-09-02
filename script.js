@@ -2,7 +2,7 @@ window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1')
     const ctx = canvas.getContext('2d')
     canvas.width = 800
-    canvas.height = 794
+    canvas.height = 720
 
     class InputHandler {
         constructor(){
@@ -78,7 +78,7 @@ window.addEventListener('load', function(){
             this.x = 0
             this.y = 0
             this.width = 2400
-            this.height = 794
+            this.height = 720
             this.speed = 7
         }
         draw(context){
@@ -98,11 +98,15 @@ window.addEventListener('load', function(){
             this.width = 160
             this.height = 119
             this.image = document.getElementById('enemyImage')
-            this.x = 0
-            this.y = 0
+            this.x = this.gameWidth
+            this.y = this.gameHeight - this.height
+            this.frameX = 0
         }
         draw(context){
-            context.drawImage(this.image, this.x, this.y)
+            context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+        }
+        update(){
+            this.x--
         }
     }
 
@@ -126,6 +130,7 @@ window.addEventListener('load', function(){
         player.draw(ctx)
         player.update(input) 
         enemy1.draw(ctx)    
+        enemy1.update()
         requestAnimationFrame(animate)
     }
     animate()
