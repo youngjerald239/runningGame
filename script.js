@@ -5,7 +5,12 @@ window.addEventListener('load', function(){
     canvas.height = 720
 
     class InputHandler {
-
+        constructor(){
+            this.keys = []
+            window.addEventListener('keydown', function(e){
+                console.log(e)
+            })
+        }
     }
 
     class Player {
@@ -28,7 +33,9 @@ window.addEventListener('load', function(){
 
     }
 
+    const input = new InputHandler()
+
     function animate(){
-        
+
     }
 })
