@@ -10,6 +10,8 @@ window.addEventListener('load', function(){
     class InputHandler {
         constructor(){
             this.keys = []
+            this.touchY = ''
+            this.touchThreshold = 30
             window.addEventListener('keydown', e => {
                 if ((e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key ==='ArrowRight') && this.keys.indexOf(e.key) === -1) {
                     this.keys.push(e.key)
@@ -19,7 +21,19 @@ window.addEventListener('load', function(){
                 if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key ==='ArrowRight') {
                     this.keys.splice(this.keys.indexOf(e.key), 1)
                 }
-            })    
+            })
+            window.addEventListener('touchstart', e => {
+                this.touchY = e.changedTouches[0].pageY
+            })
+            window.addEventListener('touchmove', e => {
+                const swipeDistance = e.changedTouches[0].pageY - this.touchY
+                this.touchY
+                if(swipeDistance <- this.touchThreshold && this.keys.indexOf('swipe up') === -1) this.keys.push('swipe up')
+                else if(swipeDistance > this.touchThreshold && this.keys.indexOf('swipe down') === -1) this.keys.push('swipe down')
+            })  
+            window.addEventListener('touchend', e => {
+                this.keys.splice(this.keys.indexOf('swipe up'), 1)
+            })          
         }
     }
 
@@ -167,7 +181,6 @@ window.addEventListener('load', function(){
     function handleEnemies(deltaTime) {
         if (enemyTimer > enemyInterval + randomEnemyInterval){
             enemies.push(new Enemy(canvas.width, canvas.height))
-            console.log(enemies)
             randomEnemyInterval = Math.random() * 1000 + 500
             enemyTimer = 0
         } else {
@@ -181,6 +194,7 @@ window.addEventListener('load', function(){
     }
 
     function displayStatusText(context){
+        context.textAlign = 'left'
         context.font = '40px Helvetica'
         context.fillStyle = 'black'
         context.fillText('score: ' + score, 20, 50)
@@ -189,9 +203,9 @@ window.addEventListener('load', function(){
         if (gameOver){
             context.textAlign = 'center'
             context.fillStyle = 'black'
-            context.fillText('Game Over, try again!', canvas.width/2, 200)
+            context.fillText('Game Over, Press Enter To Try Again...', canvas.width/2, 200)
             context.fillStyle = 'white'
-            context.fillText('Game Over, try again!', canvas.width/2 + 2, 202)
+            context.fillText('Game Over, Press Enter To Try Again...', canvas.width/2 + 2, 202)
         }
     }
 
