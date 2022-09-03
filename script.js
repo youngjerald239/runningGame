@@ -1,7 +1,7 @@
 window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1')
     const ctx = canvas.getContext('2d')
-    canvas.width = 800
+    canvas.width = 1200
     canvas.height = 720
     let enemies = []
     let score = 0
@@ -13,7 +13,7 @@ window.addEventListener('load', function(){
             window.addEventListener('keydown', e => {
                 if ((e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key ==='ArrowRight') && this.keys.indexOf(e.key) === -1) {
                     this.keys.push(e.key)
-                }
+                } else if (e.key === 'Enter' && gameOver) restartGame()
             })
             window.addEventListener('keyup', e => {
                 if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key ==='ArrowRight') {
@@ -29,7 +29,7 @@ window.addEventListener('load', function(){
             this.gameHeight = gameHeight
             this.width = 200
             this.height = 200
-            this.x = 0
+            this.x = 100
             this.y = this.gameHeight - this.height 
             this.image = document.getElementById("playerImage")
             this.frameX = 0
@@ -41,6 +41,12 @@ window.addEventListener('load', function(){
             this.speed = 0
             this.vy = 0
             this.weight = 1
+        }
+        restart(){
+            this.x = 100
+            this.y = this.gameHeight - this.height
+            this.maxFrame = 8
+            this.frameY = 0
         }
         draw(context){
             context.drawImage(this.image, this.frameX * this.width, this.frameY * this.height, this.width, this.height, this.x, this.y, this.width, this.height)
@@ -116,6 +122,9 @@ window.addEventListener('load', function(){
             this.x -= this.speed
             if (this.x < 0 - this.width) this.x = 0
         }
+        restart(){
+            this.x = 0
+        }
     }
 
     class Enemy {
@@ -136,15 +145,6 @@ window.addEventListener('load', function(){
             this.markedForDeletion = false
         }
         draw(context){
-            context.strokeStyle = 'white'
-            context.strokeRect(this.x, this.y, this.width, this.height)
-            context.beginPath()
-            context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2)
-            context.stroke()
-            context.strokeStyle = 'blue'
-            context.beginPath()
-            context.arc(this.x, this.y, this.width/2, 0, Math.PI * 2)
-            context.stroke()
             context.drawImage(this.image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height)
         }
         update(deltaTime){
@@ -193,6 +193,15 @@ window.addEventListener('load', function(){
             context.fillStyle = 'white'
             context.fillText('Game Over, try again!', canvas.width/2 + 2, 202)
         }
+    }
+
+    function restartGame(){
+        player.restart()
+        background.restart()
+        enemies = []
+        score = 0
+        gameOver = false
+        animate(0)
     }
 
     const input = new InputHandler()
