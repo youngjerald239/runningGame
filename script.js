@@ -6,6 +6,7 @@ window.addEventListener('load', function(){
     let enemies = []
     let score = 0
     let gameOver = false
+    const fullsScreenButton = document.getElementById('fullscreenButton')
 
     class InputHandler {
         constructor(){
@@ -30,9 +31,14 @@ window.addEventListener('load', function(){
                 this.touchY
                 if(swipeDistance <- this.touchThreshold && this.keys.indexOf('swipe up') === -1) this.keys.push('swipe up')
                 else if(swipeDistance > this.touchThreshold && this.keys.indexOf('swipe down') === -1) this.keys.push('swipe down')
+                {   
+                    this.keys.push('swipe down')
+                    if (gameOver) restartGame()
+                }
             })  
             window.addEventListener('touchend', e => {
                 this.keys.splice(this.keys.indexOf('swipe up'), 1)
+                this.keys.splice(this.keys.indexOf('swipe down'), 1)
             })          
         }
     }
@@ -85,12 +91,12 @@ window.addEventListener('load', function(){
                 this.frameTimer += deltaTime 
             }
             
-            // controls
+            // CONTROLS
             if (input.keys.indexOf('ArrowRight') > -1){
                 this.speed = 5
             } else if (input.keys.indexOf('ArrowLeft') > -1){
                 this.speed = -5
-            } else if (input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
+            } else if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('swipe up') > -1) && this.onGround()){
                 this.vy -= 32
             } else {
                 this.speed = 0
@@ -203,9 +209,9 @@ window.addEventListener('load', function(){
         if (gameOver){
             context.textAlign = 'center'
             context.fillStyle = 'black'
-            context.fillText('Game Over, Press Enter To Try Again...', canvas.width/2, 200)
+            context.fillText('Game Over, Press Enter or swipe down To Try Again...', canvas.width/2, 200)
             context.fillStyle = 'white'
-            context.fillText('Game Over, Press Enter To Try Again...', canvas.width/2 + 2, 202)
+            context.fillText('Game Over, Press Enter or swipe down To Try Again...', canvas.width/2 + 2, 202)
         }
     }
 
@@ -217,6 +223,19 @@ window.addEventListener('load', function(){
         gameOver = false
         animate(0)
     }
+
+    function toggleFullScreen() {
+        console.log(document.fullscreenElement)
+        if (!document.fullscreenElement) {
+            canvas.requestFullscreen().catch(err => {
+                alert(`Error, can't enable full-screen mode: ${err.message}`)
+            })
+        } else {
+            document.exitFullscreen()
+        }
+
+    }
+    fullsScreenButton.addEventListener('click', toggleFullScreen)
 
     const input = new InputHandler()
     const player = new Player(canvas.width, canvas.height)
